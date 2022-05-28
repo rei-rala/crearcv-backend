@@ -3,62 +3,93 @@ import type { Model, Document } from 'mongoose'
 import Profile from './Profile'
 
 class MongooseHandler {
-  model: Model<Document>
+  private _model: Model<Document>
+  private _excludedProps = { _id: false, __v: false }
 
   constructor(model: Model<Document>) {
-    this.model = model
+    this._model = model
   }
 
-  find = async (filter = {}) => {
-    try {
-      return { found: this.model.find(filter).lean().exec() }
-    }
-    catch (error) {
-      return { error }
-    }
+  get model(): Model<Document> {
+    return this._model
   }
 
-  findOne = async (filter = {}) => {
-    try {
-      const found = await this.model.findOne(filter).lean()
-      return { found }
-    }
-    catch (error) {
-      return { error }
-    }
+  findAll = async (query = {}, limit = 100): Promise<any[]> => {
+    return this._model.find(query, null, { limit })
   }
 
-  save = async (object: any) => {
-    try {
-      if (!object) { throw 'Ingrese propiedades' }
-      const newObject = new this.model(object)
+  find = async (filter = {}, limit = 1): Promise<{ found: any, error: any }> => {
+    let found
+    let error
 
-      return { saved: newObject.save() }
+    try {
+      found = await (limit > 1 ? this._model.find(filter).limit(limit) : this._model.findOne(filter)).select(this._excludedProps)
     }
-    catch (error) {
-      return { error }
+    catch (err: any) {
+      error = err?.message ? err.message : err ?? 'Unknown Error'
     }
+    return { found, error }
   }
 
-  updateById = async (_id: string, properties: any) => {
-    try {
-      if (!_id) { throw 'Ingrese un ID' }
-      if (!properties) { throw 'Ingrese propiedad/es para actualizar' }
+  save = async (object: any): Promise<{ saved: any, error: any }> => {
+    let saved
+    let error
 
-      return { updated: this.model.findOneAndUpdate({ _id }, { ...properties }).exec() }
+    try {
+      if (!object) { throw 'Must provide properties' }
+      const newObject = new this._model(object)
+
+      saved = await newObject.save()
+
+      if (!saved) { throw 'Could not save' }
+
     }
-    catch (error) {
-      return { error }
+    catch (err: any) {
+      error = err?.message ? err.message : err ?? 'Unknown Error'
     }
+    return { saved, error }
   }
 
-  deleteById = async (_id: string) => {
+  updateById = async (_id: string, properties: any): Promise<{ updated: any, error: any }> => {
+    let updated
+    let error
+
+
     try {
-      return { deleted: this.model.findOneAndDelete({ _id }).exec() }
+      if (!_id) { throw 'Provide an ID' }
+      if (!properties) { throw 'Must provide properties' }
+
+      delete properties._id
+
+      updated = await this._model.findByIdAndUpdate(_id, properties, { new: true }).select(this._excludedProps)
+
+      if (!updated) { throw 'Could not update' }
     }
-    catch (error) {
-      return { error }
+    catch (err: any) {
+      error = err?.message ? err.message : err ?? 'Unknown Error'
     }
+
+    return { updated, error }
+  }
+
+  deleteById = async (_id: string): Promise<{ deleted: any, error: any }> => {
+    let deleted
+    let error
+
+    try {
+      if (!_id) { throw 'Provide an ID' }
+
+      let deleted = await this._model.findByIdAndDelete(_id).select(this._excludedProps)
+
+      if (!deleted) {
+        throw 'Could not delete'
+      }
+    }
+    catch (err: any) {
+      error = err?.message ? err.message : err ?? 'Unknown Error'
+    }
+
+    return { deleted, error }
   }
 }
 
@@ -80,7 +111,6 @@ const closeConnectionToDB = async () => {
 
 
 const ProfileDB = new MongooseHandler(Profile)
-
 
 export {
   ProfileDB,
