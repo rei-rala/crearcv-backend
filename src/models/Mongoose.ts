@@ -1,10 +1,12 @@
 import { connect, connection } from 'mongoose'
 import type { Model, Document } from 'mongoose'
-import Profile from './Profile'
+import Cv from './Cv'
+import User from './User'
+import { profileExample } from '../temp'
 
 class MongooseHandler {
   private _model: Model<Document>
-  private _excludedProps = { _id: false, __v: false }
+  private _excludedProps = { __v: false }
 
   constructor(model: Model<Document>) {
     this._model = model
@@ -23,7 +25,7 @@ class MongooseHandler {
     let error
 
     try {
-      found = await (limit > 1 ? this._model.find(filter).limit(limit) : this._model.findOne(filter)).select(this._excludedProps)
+      found = await (limit > 1 ? this._model.find(filter).limit(limit).lean() : this._model.findOne(filter)).select(this._excludedProps).lean()
     }
     catch (err: any) {
       error = err?.message ? err.message : err ?? 'Unknown Error'
@@ -53,7 +55,6 @@ class MongooseHandler {
   updateById = async (_id: string, properties: any): Promise<{ updated: any, error: any }> => {
     let updated
     let error
-
 
     try {
       if (!_id) { throw 'Provide an ID' }
@@ -110,9 +111,10 @@ const closeConnectionToDB = async () => {
 }
 
 
-const ProfileDB = new MongooseHandler(Profile)
+const CvDB = new MongooseHandler(Cv)
+const UserDB = new MongooseHandler(User)
 
 export {
-  ProfileDB,
+  CvDB, UserDB,
   connectToDB, closeConnectionToDB
 }

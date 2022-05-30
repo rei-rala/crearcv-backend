@@ -1,0 +1,65 @@
+<header>
+  <div><a href="/">CrearCV</a></div>
+
+  <nav class="navbar">
+    <ul>
+      <li class="navbar--item"><a href="/create">
+          Mis CVs
+        </a></li>
+      <li class="navbar--item profile">
+        {{#if user}}
+        <img class='profile-img' src="{{ user.photo }}" onerror="this.src='/assets/images/noPhoto.png';this.onerror='';"
+          alt="Tu foto {{ user.displayName }}">
+        <div class="auth">
+          <a href="/profile"><b>{{ user.displayName }}</b></a>
+          <a href="/auth/logout">Cerrar sesion</a>
+        </div>
+        {{else}}
+        <img class='profile-img' src="/assets/images/noPhoto.png" alt="Inicia sesion para ver mas opciones"
+          onerror="this.src='/assets/images/noPhoto.png'">
+        <div class="auth">
+          <a href="/auth">Iniciar sesion con Google</a>
+        </div>
+
+        {{/if}}
+      </li>
+    </ul>
+  </nav>
+</header>
+<style>
+  :root {
+    --navbar-auth-height: calc(var(--navbar-height) * .6);
+  }
+
+  .navbar ul {
+    display: flex;
+    height: 100%;
+    gap: 0.5rem;
+  }
+
+  .navbar--item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+    height: var(--navbar-height);
+
+    min-width: 5rem;
+  }
+
+  .navbar--item.profile .profile-img {
+    border-radius: 50%;
+    height: var(--navbar-auth-height);
+    aspect-ratio: 1;
+  }
+
+  .navbar--item.profile .auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    text-align: center;
+    height: var(--navbar-auth-height);
+    width: 6rem;
+  }
+</style>

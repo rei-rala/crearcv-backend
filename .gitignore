@@ -1,5 +1,7 @@
 .env
 node_modules/
 dist/
+.vscode
 
 temp.ts
+src/config.ts

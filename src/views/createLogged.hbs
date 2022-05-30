@@ -1,0 +1,19 @@
+{{#if cvs}}
+<h2>Tus perfiles</h2>
+
+<ul>
+  {{#each cvs}}
+  <li>
+    <a href="/create/{{this.id}}">{{this.id}}</a>
+  </li>
+  {{/each}}
+</ul>
+
+{{else}}
+<h2>No tienes perfiles creados</h2>
+{{/if}}
+
+<form action="/create" method="post">
+  <input type="radio" checked="checked" name="newCv" style="display: none;" />
+  <input type="submit" value="Crear nuevo perfil" />
+</form>

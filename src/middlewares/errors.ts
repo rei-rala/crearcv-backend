@@ -1,4 +1,4 @@
-import type { express } from '../vendor/index';
+import type { Request, Response, NextFunction } from 'express';
 
 // generic error handler
 type ErrorResponse = {
@@ -8,12 +8,19 @@ type ErrorResponse = {
 };
 
 type ErrorMiddleware = {
-  (err: ErrorResponse, req: express.Request, res: express.Response, next: express.NextFunction): void
+  (err: ErrorResponse, req: Request, res: Response, next: NextFunction): void
 }
 
-export let apiErrorMiddleware: ErrorMiddleware = ({ code, message, ok = false }, _, res, next) => {
+export let apiErrorMiddleware: ErrorMiddleware = ({ code, message, ok = false }, _, res, __) => {
   res.status(code || 500).json({
     ok,
     error: message,
   });
+}
+
+export let templateErrorMiddleware: ErrorMiddleware = ({ code, message }, _, res, __) => {
+  res.render('error', {
+    code,
+    message
+  })
 }

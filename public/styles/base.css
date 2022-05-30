@@ -1,14 +1,75 @@
+:root {
+  --navbar-height: 3.5rem;
+  --h-padding: 0.5rem;
+}
+
 .error {
   color: red;
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
+body {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+header,
+main,
+section,
+footer {
+  padding: 0 var(--h-padding);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  margin: 0;
+}
+
 iframe {
   width: 100%;
   min-height: 100vh;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* TEST */
+header {
+  background-color: antiquewhite;
+}
+main {
+  background-color: cadetblue;
+}
+section {
+  background-color: gold;
+}
+footer {
+  background-color: cornflowerblue;
+}
+/* END TEST */
