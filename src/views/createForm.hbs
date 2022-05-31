@@ -1,7 +1,249 @@
 {{#if cv}}
-<form>
-  FORM WILL BE HARDCODED =/
+<div>
+  <h2>CV de {{ user.displayName }}</h2>
+  {{#compareStrings cv.ownerId user.id}}
+  <i>Eres el autor</i>
+  {{/compareStrings}}
+  <p> Creado el <b title="{{ cv.created }}">{{ cv.createdFormatted }}</b> </p>
+  <p> Actualizado <b title="{{ cv.lastUpdated }}">{{ cv.lastUpdatedFromNow }}</b></p>
+</div>
+
+<form method="POST" action="/mycvs/edit/{{ cv._id }}">
+  <label>
+    Alias para el CV
+    {{#if cv.cvName}}
+    <input type="text" name="cvName" value="{{ cv.cvName }}" placeholder="{{ cv.cvName }}" />
+    {{else}}
+    <input type="text" name="cvName"  placeholder="{{ cv._id }}" />
+    {{/if}}
+  </label>
+  <label>
+    Nombre completo
+    <input type="text" name='name' value="{{ cv.name }}" placeholder="{{cv.name}}">
+  </label>
+  <label>
+    Estado actual
+    <input type="text" name='currently' value="{{ cv.currently }}" placeholder="{{cv.currently}}">
+  </label>
+
+  <label>
+    Titulo
+    <input type="text" name='title' value="{{ cv.title }}" placeholder="{{cv.title}}">
+  </label>
+
+  <label>
+    Ubicacion
+    <input type="text" name='location' value="{{ cv.location }}" placeholder="{{cv.location}}">
+  </label>
+
+  <label>
+    Acerca de
+    <textarea name='about' placeholder="{{cv.about}}">{{cv.about}}</textarea>
+  </label>
+
+  <label>
+    Fotos (URL)
+    <input type="text" name='photos' value="{{ cv.photos }}" placeholder="{{cv.photos}}">
+    {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad de fotos --}}
+  </label>
+
+  <div>
+    Trayectoria
+    <div>
+
+      Academica
+      {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad trayectoria academica --}}
+
+      <label>
+        Titulo
+        <input type="text" name='cv.history.academic.title' value="{{ cv.history.academic.title }}"
+          placeholder="{{cv.history.academic.title}}">
+      </label>
+      <label>
+        Institucion
+        <input type="text" name='cv.history.academic.where' value="{{ cv.history.academic.where }}"
+          placeholder="{{cv.history.academic.where}}">
+      </label>
+      <label>
+        Desde
+        <input type="date" name='cv.history.academic.from' value="{{ cv.history.academic.from }}"
+          placeholder="{{cv.history.academic.from}}">
+      </label>
+
+      <label>
+        Hasta
+        <input type="date" name='cv.history.academic.to' value="{{ cv.history.academic.to }}"
+          placeholder="{{cv.history.academic.to}}">
+      </label>
+
+      <label>
+        Condicion
+        <input type="text" name='cv.history.academic.condition' value="{{ cv.history.academic.condition }}"
+          placeholder="{{cv.history.academic.condition}}">
+      </label>
+
+      <label>Es actual
+        <input type="checkbox" name='cv.history.academic.isCurrent' value="{{ cv.history.academic.isCurrent }}"
+          placeholder="{{cv.history.academic.isCurrent}}">
+      </label>
+
+    </div>
+
+    <div>
+      Profesional
+      {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad trayectoria profesional --}}
+
+      <label>
+        Titulo
+        <input type="text" name='cv.history.professional.title' value="{{ cv.history.professional.title }}"
+          placeholder="{{cv.history.professional.title}}">
+      </label>
+      <label>
+        Institucion
+        <input type="text" name='cv.history.professional.where' value="{{ cv.history.professional.where }}"
+          placeholder="{{cv.history.professional.where}}">
+      </label>
+      <label>
+        Desde
+        <input type="date" name='cv.history.professional.from' value="{{ cv.history.professional.from }}"
+          placeholder="{{cv.history.professional.from}}">
+      </label>
+
+      <label>
+        Hasta
+        <input type="date" name='cv.history.professional.to' value="{{ cv.history.professional.to }}"
+          placeholder="{{cv.history.professional.to}}">
+      </label>
+
+      <label>
+        Seniority
+        <input type="text" name='cv.history.professional.seniority' value="{{ cv.history.professional.seniority }}"
+          placeholder="{{cv.history.professional.seniority}}">
+      </label>
+
+      <label>Es actual
+        <input type="checkbox" name='cv.history.professional.isCurrent' value="{{ cv.history.professional.isCurrent }}"
+          placeholder="{{cv.history.professional.isCurrent}}">
+      </label>
+    </div>
+  </div>
+
+  <div>
+    Contacto
+    {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad de contactos --}}
+
+    <div>
+      <label>
+        Tipo
+        <input type="text" name='cv.contact.type' value="{{ cv.contact.type }}" placeholder="{{cv.contact.type}}">
+      </label>
+
+      <label>
+        URL
+        <input type="text" name='cv.contact.url' value="{{ cv.contact.url }}" placeholder="{{cv.contact.url}}">
+      </label>
+    </div>
+
+  </div>
+
+  <div>
+    Idiomas
+    {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad de idiomas --}}
+
+    <div>
+      <label>
+        Idioma
+        <input type="text" name='cv.languages.language' value="{{ cv.languages.language }}"
+          placeholder="{{cv.languages.language}}">
+      </label>
+      <label>
+        Nivel
+        <input type="text" name='cv.languages.level' value="{{ cv.languages.level }}"
+          placeholder="{{cv.languages.level}}">
+      </label>
+    </div>
+  </div>
+
+
+  <div>
+    Destacados
+    {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad de destacados --}}
+
+    <div>
+      <label>
+        Tipo
+        <input type="text" name='cv.highlights.type' value="{{ cv.highlights.type }}"
+          placeholder="{{cv.highlights.type}}">
+      </label>
+      <label>
+        Texto
+        <input type="text" name='cv.highlights.text' value="{{ cv.highlights.text }}"
+          placeholder="{{cv.highlights.text}}">
+      </label>
+    </div>
+  </div>
+
+  <div>
+    Seccion personalizada
+
+    <div>
+      <label>
+        Titulo
+        <input type="text" name='cv.customSection.title' value="{{ cv.customSection.title }}"
+          placeholder="{{cv.customSection.title}}">
+      </label>
+
+      <label>
+        Hover
+        <input type="text" name='cv.customSection.hover' value="{{ cv.customSection.hover }}"
+          placeholder="{{cv.customSection.hover}}">
+      </label>
+
+      <div>
+        Lineas de seccion personalizada
+        {{!-- TODO: Boton para agregar nuevas lineas de input para mas cantidad de lineas de seccion personalizada --}}
+
+        <div>
+          <label>
+            Texto
+            <input type="text" name='cv.customSection.lines.text' value="{{ cv.customSection.lines.text }}"
+              placeholder="{{cv.customSection.lines.text}}">
+          </label>
+          <label>
+            Tooltip
+            <input type="text" name='cv.customSection.lines.tooltip' value="{{ cv.customSection.lines.tooltip }}"
+              placeholder="{{cv.customSection.lines.tooltip}}">
+          </label>
+          <label>
+            Icono
+            <input type="text" name='cv.customSection.lines.icon' value="{{ cv.customSection.lines.icon }}"
+              placeholder="{{cv.customSection.lines.icon}}">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <input type="submit" value="Actualizar CV">
+    <input type="reset" value="Cancelar cambios">
 </form>
+
 {{else}}
 <b>Se produjo un error</b>
+Volver a <a href="/create">crear</a>
 {{/if}}
+
+<style>
+  {
+      {
+       !-- TODO --
+    }
+  }
+
+  form label {
+    display: block;
+  }
+</style>
+<script>
+  { { !--TODO --} }
+  { { !--axios submit put method-- } }
+</script>

@@ -1,5 +1,6 @@
 :root {
   --navbar-height: 3.5rem;
+  --footer-height: 3rem;
   --h-padding: 0.5rem;
 }
 
@@ -11,12 +12,12 @@ html,
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 body {
   min-height: 100vh;
-  overflow: hidden;
+  overflow: hidden scroll !important;
+  padding-bottom: var(--footer-height);
 }
 
 header,
@@ -37,6 +38,7 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+  height: var(--footer-height);
 }
 
 h1,

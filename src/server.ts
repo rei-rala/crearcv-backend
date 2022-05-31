@@ -1,14 +1,17 @@
-import express from 'express';
+import express, { Router } from 'express';
 import dotenv from 'dotenv';
 
 import passport from 'passport'
 
 import configServer from "./libs";
-import { createCv, createCvActive, editCvActive, getCv, landingPage, } from './controllers/base.controller';
+
 import { isLoggedIn } from './middlewares/auth'
 import { apiErrorMiddleware, templateErrorMiddleware } from "./middlewares/errors";
 import { authRouter } from './controllers/auth.controller';
+import * as baseRoutes from './controllers/base.controller';
+import * as myCvsRoutes from './controllers/myCvs.controller';
 
+let { myCvs } = myCvsRoutes
 
 dotenv.config()
 const app = express();
@@ -22,19 +25,18 @@ app.get('/login/cb', passport.authenticate('google', {
   successRedirect: '/',
   failureRedirect: '/auth/login/failure'
 }))
-app.get("/logout", (req, res, next) => {
-  req.session.destroy((error) => error ? next({ error }) : res.redirect("/"))
-  req.user = null
-});
 
 
-app.get('/', landingPage)
-app.get('/create', createCv)
-app.post('/create', createCvActive)
-app.get('/create/:id', editCvActive)
+app.use('/myCvs', myCvs)
+myCvs.get('/', myCvsRoutes.createCv)
 
-app.get('/protegido', isLoggedIn, (req, res) => { res.render('home', { user: req.user }) })
-app.get('/profile', isLoggedIn, getCv)
+myCvs.use(isLoggedIn)
+myCvs.post('/create', myCvsRoutes.createNewCv)
+myCvs.get('/edit/:id', myCvsRoutes.editCvPage)
+myCvs.post('/edit/:id', myCvsRoutes.editCvAction)
+
+app.get('/', baseRoutes.landingPage)
+app.get('/profile', isLoggedIn, baseRoutes.getProfile)
 
 app.get('/login/cb', (req, res) => {
   res.redirect('/')

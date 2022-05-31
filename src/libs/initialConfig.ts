@@ -2,8 +2,11 @@ import cookieParser from 'cookie-parser'
 import { Express, json, urlencoded, static as staticFolder } from 'express';
 import { closeConnectionToDB, connectToDB } from '../models/Mongoose';
 import morgan from 'morgan'
+import moment from 'moment';
 
 export const initSvConfig = (expressApp: Express, mongoUrl: string, port: string) => {
+  moment.locale('es')
+
   let enviroment = process.env.NODE_ENV || "development";
 
   if (enviroment.includes('dev')) {

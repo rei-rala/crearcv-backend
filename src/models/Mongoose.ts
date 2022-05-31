@@ -17,7 +17,7 @@ class MongooseHandler {
   }
 
   findAll = async (query = {}, limit = 100): Promise<any[]> => {
-    return this._model.find(query, null, { limit })
+    return this._model.find(query, null, { limit }).lean()
   }
 
   find = async (filter = {}, limit = 1): Promise<{ found: any, error: any }> => {
@@ -52,7 +52,7 @@ class MongooseHandler {
     return { saved, error }
   }
 
-  updateById = async (_id: string, properties: any): Promise<{ updated: any, error: any }> => {
+  updateById = async (_id: string, properties: { [key: string]: any }): Promise<{ updated: any, error: any }> => {
     let updated
     let error
 
@@ -63,7 +63,6 @@ class MongooseHandler {
       delete properties._id
 
       updated = await this._model.findByIdAndUpdate(_id, properties, { new: true }).select(this._excludedProps)
-
       if (!updated) { throw 'Could not update' }
     }
     catch (err: any) {

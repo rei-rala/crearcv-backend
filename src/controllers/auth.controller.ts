@@ -1,6 +1,17 @@
 import { Router } from "express";
 import passport from 'passport'
 
+// extending Request type for session logout function arguments
+declare module 'express-serve-static-core' {
+  export interface Request {
+    logout: (...args) => void
+    logOut: (...args) => void
+    session: {
+      destroy: (...args) => void
+    }
+  }
+}
+
 export const authRouter = Router()
 
 authRouter.get('/', passport.authenticate('google', { scope: ['email', 'profile'] }))
@@ -18,24 +29,11 @@ authRouter.get('/login/success', (_, res) => {
 
 
 authRouter.get('/logout', (req, res, next) => {
-  req.logout();
-  req.session.destroy((error) => {
-    if (error) {
-      next({ message: error })
-      return
-    }
-  })
-  res.redirect('/')
-})
+  // TODO: FIX LOGOUT ERROR
+  // Message: req#logout requires a callback function
+  req.logout()
+  req.logOut()
 
-
-authRouter.post('/logout', (req, res, next) => {
-  req.logout();
-  req.session.destroy((error) => {
-    if (error) {
-      next({ message: error })
-      return
-    }
-  })
+  req.session.destroy()
   res.redirect('/')
 })
